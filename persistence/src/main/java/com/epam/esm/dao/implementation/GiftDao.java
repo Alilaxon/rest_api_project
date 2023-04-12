@@ -4,6 +4,7 @@ import com.epam.esm.dao.DBmanadger.DBManager;
 import com.epam.esm.dao.GiftRepository;
 import com.epam.esm.dao.mapper.GiftMapper;
 import com.epam.esm.entity.GiftCertificate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class GiftDao implements GiftRepository {
     @Override
     public GiftCertificate save(GiftCertificate giftCertificate) {
@@ -20,7 +22,7 @@ public class GiftDao implements GiftRepository {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO gifts " +
                             "(gift_name, description, price," +
-                            " duration, createdate, lastupdatedate, tag_id)" +
+                            " duration, create_date, last_update_date, tag_id)" +
                             " VALUES(?,?,?,?,?,?,?) ");
 
             statement.setString(1, giftCertificate.getName());
@@ -60,7 +62,7 @@ public class GiftDao implements GiftRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return giftCertificateList;
     }
 
     @Override

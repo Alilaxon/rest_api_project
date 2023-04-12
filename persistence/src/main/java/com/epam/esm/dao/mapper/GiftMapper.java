@@ -11,6 +11,8 @@ public class GiftMapper {
     public static GiftCertificate extractGift (ResultSet resultSet) throws SQLException {
 
 
+
+
         return GiftBuilder.builder()
                 .id(resultSet.getLong(Columns.ID))
                 .name(resultSet.getString(Columns.NAME))
