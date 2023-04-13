@@ -24,15 +24,19 @@ public class GiftController {
         this.giftCertificateService = giftCertificateService;
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public List<GiftCertificate> getAll() {
+
+        System.out.println("get all");
 
         return giftCertificateService.getAll();
 
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) {
+
+        System.out.println("create");
 
         giftCertificateService.create(giftDto);
 
