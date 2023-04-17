@@ -43,6 +43,11 @@ public class GiftCertificateService implements GiftService {
     }
 
     @Override
+    public GiftCertificate get() {
+        return null;
+    }
+
+    @Override
     public Long deleteById(Long id) {
         return null;
     }
