@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface GiftService {
 
+
     public GiftCertificate create(GiftDto giftDto);
 
     List<GiftCertificate> getAll();
+
+    List<GiftCertificate> getAllByTag(String tag);
+
+    GiftCertificate get();
 
     Long deleteById(Long id);
 

@@ -52,6 +52,23 @@ public class TagDao implements TagRepository {
         }
 
     }
+
+    @Override
+    public void Delete(Long id) {
+
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM tags WHERE id =?");
+            statement.setLong(1, id);
+            statement.execute();
+            statement.close();
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
 
 

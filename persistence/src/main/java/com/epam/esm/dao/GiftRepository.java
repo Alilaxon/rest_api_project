@@ -8,7 +8,11 @@ public interface GiftRepository {
 
     GiftCertificate save (GiftCertificate giftCertificate);
 
+    boolean existsByName (String name);
+
     List<GiftCertificate> findAll();
+
+    List<GiftCertificate> findAllByTag(String tag);
 
     GiftCertificate update (GiftCertificate giftCertificate);
 

@@ -1,5 +1,7 @@
 package com.epam.esm.entity;
 
+import java.util.List;
+
 public class GiftCertificate {
 
     private Long id;
@@ -9,6 +11,16 @@ public class GiftCertificate {
     private Long duration;
     private String createDate;
     private String lastUpdateDate;
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    private List<Tag> tags;
 
     public GiftCertificate() {
     }

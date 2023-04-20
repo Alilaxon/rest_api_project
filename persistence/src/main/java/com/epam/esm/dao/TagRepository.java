@@ -7,4 +7,6 @@ public interface TagRepository {
     Tag save(Tag tag);
 
     Tag findByName(String name);
+
+    void Delete (Long id);
 }

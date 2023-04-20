@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class GiftCertificateService implements GiftService {
 
-    private GiftRepository giftRepository;
+    private final GiftRepository giftRepository;
 
     @Autowired
     public GiftCertificateService(GiftRepository giftRepository) {
@@ -43,6 +43,12 @@ public class GiftCertificateService implements GiftService {
     }
 
     @Override
+    public List<GiftCertificate> getAllByTag(String tag) {
+
+        return giftRepository.findAll();
+    }
+
+    @Override
     public GiftCertificate get() {
         return null;
     }
@@ -55,5 +61,11 @@ public class GiftCertificateService implements GiftService {
     @Override
     public Long update(Long id, GiftDto giftDto) {
         return null;
+    }
+
+    private boolean checkGiftName(GiftDto giftDto){
+
+
+    return false;
     }
 }
