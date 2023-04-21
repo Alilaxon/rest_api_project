@@ -32,7 +32,7 @@ public class GiftDao implements GiftRepository {
             statement.setString(6, gift.getLastUpdateDate());
             int affectedRows = statement.executeUpdate();
 
-            if (affectedRows == 0){
+            if (affectedRows == 0) {
                 throw new SQLException("Creating gift failed, no rows affected.");
             }
 
@@ -47,9 +47,9 @@ public class GiftDao implements GiftRepository {
             PreparedStatement manyToMany = connection.prepareStatement
                     ("INSERT INTO gifts_tags(gift_id, tag_id) VALUES(?,?) ");
 
-            for (Tag tag: gift.getTags()) {
-                manyToMany.setLong(1,gift.getId());
-                manyToMany.setLong(2,tag.getId());
+            for (Tag tag : gift.getTags()) {
+                manyToMany.setLong(1, gift.getId());
+                manyToMany.setLong(2, tag.getId());
                 manyToMany.execute();
             }
             connection.commit();
@@ -67,10 +67,10 @@ public class GiftDao implements GiftRepository {
 
     @Override
     public boolean existsByName(String name) {
-        try(Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE gift_name =?");
-            statement.setString(1,name);
+            statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             statement.close();
 
@@ -89,12 +89,12 @@ public class GiftDao implements GiftRepository {
 
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        try (Connection connection = DBManager.getInstance().getConnection()){
+        try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts");
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
 
                 giftCertificateList.add(GiftMapper.extractGift(resultSet));
             }
@@ -109,16 +109,17 @@ public class GiftDao implements GiftRepository {
 
     @Override
     public List<GiftCertificate> findAllByTag(String tag) {
+
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        try (Connection connection = DBManager.getInstance().getConnection()){
+        try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM  gifts INNER JOIN tags t on t.tag_name = ? ORDER BY gift_name DESC ");
-            statement.setString(1,tag);
+            statement.setString(1, tag);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
 
                 giftCertificateList.add(GiftMapper.extractGift(resultSet));
             }
@@ -132,19 +133,42 @@ public class GiftDao implements GiftRepository {
     }
 
     @Override
-    public GiftCertificate update(GiftCertificate giftCertificate) {
+    public GiftCertificate update(GiftCertificate gift) {
         try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE gifts SET gift_name = ? , description = ?," +
+                            "price =?,duration =?  WHERE id = ?");
+
+            statement.setString(1, gift.getName());
+            statement.setString(2, gift.getDescription());
+            statement.setLong(3, gift.getPrice());
+            statement.setLong(4, gift.getDuration());
+            statement.setLong(5, gift.getId());
+            statement.executeUpdate();
+            statement.close();
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return gift;
     }
 
     @Override
     public void delete(Long id) {
 
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM gifts WHERE id =?");
+            statement.setLong(1, id);
+            statement.execute();
+            statement.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
-
-
 }
