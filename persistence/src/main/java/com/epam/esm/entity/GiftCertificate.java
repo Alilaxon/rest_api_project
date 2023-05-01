@@ -28,7 +28,7 @@ public class GiftCertificate {
     public GiftCertificate(Long id, String name,
                            String description, Long price,
                            Long duration, String createDate,
-                           String lastUpdateDate) {
+                           String lastUpdateDate,List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,6 +36,7 @@ public class GiftCertificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
     }
 
     public Long getId() {

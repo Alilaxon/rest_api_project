@@ -44,11 +44,13 @@ public class GiftController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
-    @GetMapping("read/{id}")
+    @GetMapping("/read/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificate getById (@PathVariable("id") Long id){
 
-        return null;
+        //TODO
+
+        return giftCertificateService.get(id);
     }
 
 

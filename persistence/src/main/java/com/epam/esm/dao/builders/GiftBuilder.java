@@ -1,6 +1,9 @@
 package com.epam.esm.dao.builders;
 
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
+
+import java.util.List;
 
 public class GiftBuilder {
 
@@ -11,6 +14,8 @@ public class GiftBuilder {
     private Long duration;
     private String createDate;
     private String lastUpdateDate;
+
+    private List<Tag> tags;
 
 
 
@@ -68,10 +73,16 @@ public class GiftBuilder {
         return this;
     }
 
+
+    public GiftBuilder tags (List<Tag> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     public GiftCertificate build(){
 
         return new GiftCertificate(id,name,description,price,
-                duration,createDate,lastUpdateDate);
+                duration,createDate,lastUpdateDate,tags);
     }
 }
 

@@ -2,13 +2,15 @@ package com.epam.esm.dao.mapper;
 
 import com.epam.esm.dao.builders.GiftBuilder;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class GiftMapper {
 
-    public static GiftCertificate extractGift (ResultSet resultSet) throws SQLException {
+    public static GiftCertificate extractGift (ResultSet resultSet, List<Tag> tags) throws SQLException {
 
 
 
@@ -21,6 +23,7 @@ public class GiftMapper {
                 .duration(resultSet.getLong(Columns.DURATION))
                 .createDate(resultSet.getString(Columns.CREATE_DATE))
                 .lastUpdateDate(resultSet.getString(Columns.lAST_UPDATE_DATE))
+                .tags(tags)
                 .build();
 
     }

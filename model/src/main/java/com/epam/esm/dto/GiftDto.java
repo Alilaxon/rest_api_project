@@ -1,8 +1,10 @@
 package com.epam.esm.dto;
 
+import com.epam.esm.entity.Tag;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.beans.ConstructorProperties;
+import java.util.List;
 
 public class GiftDto {
 
@@ -14,15 +16,18 @@ public class GiftDto {
 
     private Long duration;
 
+    private List<Tag> tags;
+
 
     public GiftDto() {
     }
-    @ConstructorProperties({"name", "description","price","duration"})
-    public GiftDto(String name, String description, Long price, Long duration) {
+    @ConstructorProperties({"name", "description","price","duration","tags"})
+    public GiftDto(String name, String description, Long price, Long duration,List<Tag> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
+        this.tags = tags;
     }
 
     public String getName() {
@@ -57,6 +62,14 @@ public class GiftDto {
         this.duration = duration;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "GiftDto{" +
@@ -64,6 +77,7 @@ public class GiftDto {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
+                ", tags=" + tags +
                 '}';
     }
 }

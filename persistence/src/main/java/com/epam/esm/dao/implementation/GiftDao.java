@@ -2,7 +2,10 @@ package com.epam.esm.dao.implementation;
 
 import com.epam.esm.dao.DBmanadger.DBManager;
 import com.epam.esm.dao.GiftRepository;
+import com.epam.esm.dao.TagRepository;
+import com.epam.esm.dao.mapper.Columns;
 import com.epam.esm.dao.mapper.GiftMapper;
+import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import org.springframework.stereotype.Repository;
@@ -66,6 +69,32 @@ public class GiftDao implements GiftRepository {
     }
 
     @Override
+    public GiftCertificate findById(Long id) {
+
+        GiftCertificate giftCertificate = new GiftCertificate();
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE id =?");
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                giftCertificate = (GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
+
+            }
+            statement.close();
+
+            return giftCertificate;
+
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean existsByName(String name) {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
@@ -96,7 +125,7 @@ public class GiftDao implements GiftRepository {
 
             while (resultSet.next()) {
 
-                giftCertificateList.add(GiftMapper.extractGift(resultSet));
+                giftCertificateList.add(GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
             }
 
             statement.close();
@@ -121,7 +150,7 @@ public class GiftDao implements GiftRepository {
 
             while (resultSet.next()) {
 
-                giftCertificateList.add(GiftMapper.extractGift(resultSet));
+                giftCertificateList.add(GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
             }
 
             statement.close();
@@ -170,5 +199,30 @@ public class GiftDao implements GiftRepository {
         }
 
 
+    }
+
+    private List<Tag> findByGiftId(Long id) {
+
+        List<Tag> tags = new ArrayList<>();
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags " +
+                    "INNER JOIN gifts_tags gt on tags.id = gt.tag_id WHERE gift_id=?");
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+
+            while (resultSet.next()) {
+                tags.add(TagMapper.extractTag(resultSet));
+            }
+
+            statement.close();
+
+            return tags;
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+        }
     }
 }
