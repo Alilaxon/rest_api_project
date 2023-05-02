@@ -24,7 +24,7 @@ public class GiftDao implements GiftRepository {
                     "INSERT INTO gifts " +
                             "(gift_name, description, price," +
                             " duration, create_date, last_update_date)" +
-                            " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                            " VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             connection.setAutoCommit(false);
             statement.setString(1, gift.getName());

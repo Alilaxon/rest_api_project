@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface TagRepository {
 
+    List<Tag> getAll();
+
     Tag save(Tag tag);
 
     Tag findByName(String name);

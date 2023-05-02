@@ -9,8 +9,8 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,15 +22,16 @@ public class GiftCertificateService implements GiftService {
     private final TagRepository tagRepository;
 
     @Autowired
-    public GiftCertificateService(GiftRepository giftRepository,TagRepository tagRepository) {
+    public GiftCertificateService(GiftRepository giftRepository, TagRepository tagRepository) {
 
         this.giftRepository = giftRepository;
         this.tagRepository = tagRepository;
     }
+
     @Override
     public GiftCertificate create(GiftDto giftDto) {
 
-        System.out.println(giftDto.toString());
+        List<Tag> tags = checkNewTags(tagRepository.getAll(), giftDto.getTags());
 
         return giftRepository.save(GiftBuilder.builder()
                 .name(giftDto.getName())
@@ -39,11 +40,11 @@ public class GiftCertificateService implements GiftService {
                 .duration(giftDto.getDuration())
                 .createDate(String.valueOf(LocalDateTime.now()))
                 .lastUpdateDate(String.valueOf(LocalDateTime.now()))
+                .tags(tags)
                 .build());
     }
 
     public List<GiftCertificate> getAll() {
-
 
         return giftRepository.findAll();
     }
@@ -62,8 +63,7 @@ public class GiftCertificateService implements GiftService {
 
     @Override
     public Long deleteById(Long id) {
-
-         giftRepository.delete(id);
+        giftRepository.delete(id);
 
         return id;
     }
@@ -74,22 +74,28 @@ public class GiftCertificateService implements GiftService {
         return null;
     }
 
-    private boolean checkGiftName(GiftDto giftDto){
+    private boolean checkGiftName(GiftDto giftDto) {
 
-        //TODO
-    return false;
+        return giftRepository.existsByName(giftDto.getName());
     }
 
-    private void checkNewTags(List<Tag> allTags, List<Tag> newTags){
-        for (Tag newTag: newTags) {
-            for (Tag tag: allTags) {
-               if (!Objects.equals(newTag.getName(), tag.getName())){
-                tagRepository.save(newTag);
-               }
-
-
+    private List<Tag> checkNewTags(List<Tag> allTags, List<Tag> newTags) {
+        List<Tag> tagList = new ArrayList<>();
+        for (Tag newTag : newTags) {
+            boolean isExist = false;
+            for (Tag tag : allTags) {
+                if (Objects.equals(newTag.getName(), tag.getName())) {
+                    newTag.setId(tagRepository.save(newTag).getId());
+                    tagList.add(tag);
+                    isExist = true;
+                    break;
+                }
             }
-
+            if (!isExist) {
+                newTag.setId(tagRepository.save(newTag).getId());
+                tagList.add(newTag);
+            }
         }
+        return tagList;
     }
 }

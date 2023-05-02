@@ -1,6 +1,7 @@
 package com.epam.esm.entity;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GiftCertificate {
 
@@ -93,5 +94,18 @@ public class GiftCertificate {
 
     public void setLastUpdateDate(String lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GiftCertificate)) return false;
+        GiftCertificate that = (GiftCertificate) o;
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(duration, that.duration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, price, duration);
     }
 }

@@ -9,7 +9,7 @@ public class TagMapper {
 
     public static Tag extractTag (ResultSet resultSet) throws SQLException {
 
-        Tag tag = new Tag(resultSet.getLong(1), resultSet.getString(2));
+        Tag tag = new Tag(resultSet.getLong(Columns.ID), resultSet.getString(Columns.TAG_NAME));
 
         return tag;
 

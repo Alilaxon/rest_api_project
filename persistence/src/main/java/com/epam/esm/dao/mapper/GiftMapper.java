@@ -17,7 +17,7 @@ public class GiftMapper {
 
         return GiftBuilder.builder()
                 .id(resultSet.getLong(Columns.ID))
-                .name(resultSet.getString(Columns.NAME))
+                .name(resultSet.getString(Columns.GIFT_NAME))
                 .description(resultSet.getString(Columns.DESCRIPTION))
                 .price(resultSet.getLong(Columns.PRICE))
                 .duration(resultSet.getLong(Columns.DURATION))
