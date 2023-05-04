@@ -95,6 +95,31 @@ public class GiftDao implements GiftRepository {
     }
 
     @Override
+    public GiftCertificate findByName(String name) {
+        GiftCertificate giftCertificate = new GiftCertificate();
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE gift_name =?");
+            statement.setString(1,name);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                giftCertificate = (GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
+
+            }
+            statement.close();
+
+            return giftCertificate;
+
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean existsByName(String name) {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 

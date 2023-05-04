@@ -98,10 +98,32 @@ public class TagDao implements TagRepository {
 
     }
 
+    @Override
+    public Tag findById(Long id) {
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT FROM tags WHERE id=?");
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            Tag tag = null;
+
+            while (resultSet.next()) {
+
+                tag = TagMapper.extractTag(resultSet);
+            }
+            statement.close();
+
+            return tag;
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+        }
+    }
 
 
     @Override
-    public void Delete(Long id) {
+    public Long Delete(Long id) {
 
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
@@ -114,7 +136,7 @@ public class TagDao implements TagRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
+     return id;
     }
 }
 

@@ -12,5 +12,7 @@ public interface TagRepository {
 
     Tag findByName(String name);
 
-    void Delete (Long id);
+    Tag findById(Long id);
+
+    Long Delete (Long id);
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/")
+
 public class GreetingsController {
 
     @GetMapping

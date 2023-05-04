@@ -1,8 +1,12 @@
 package com.epam.esm.service.implementation;
 
 import com.epam.esm.dao.TagRepository;
+import com.epam.esm.dao.builders.TagBuilder;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +14,8 @@ import java.util.List;
 
 @Service
 public class TagServiceImp implements TagService {
+
+    private static final Logger log = LogManager.getLogger(TagServiceImp.class);
 
     private TagRepository tagRepository;
 
@@ -22,15 +28,26 @@ public class TagServiceImp implements TagService {
     @Override
     public Tag create(Tag tag) {
 
-        //TODO
-        return null;
+        return tagRepository.save(tag);
+    }
+
+    @Override
+    public Tag create(TagDto tagDto) {
+
+        return tagRepository.save(TagBuilder.builder().name(tagDto.getName()).build());
+    }
+
+    @Override
+    public Tag getById(Long id) {
+
+        return tagRepository.findById(id);
     }
 
     @Override
     public List<Tag> getAll() {
 
-        //TODO
-        return null;
+
+        return tagRepository.getAll();
     }
 
     @Override
@@ -38,5 +55,10 @@ public class TagServiceImp implements TagService {
 
         //TODO
         return null;
+    }
+
+    @Override
+    public Long deleteById(Long id) {
+        return tagRepository.Delete(id);
     }
 }

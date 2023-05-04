@@ -18,5 +18,5 @@ public interface GiftService {
 
     Long deleteById(Long id);
 
-    Long update(Long id, GiftDto giftDto);
+    GiftCertificate update(Long id, GiftDto giftDto);
 }

@@ -10,6 +10,8 @@ public interface GiftRepository {
 
     GiftCertificate findById(Long id);
 
+    GiftCertificate findByName(String name);
+
     boolean existsByName (String name);
 
     List<GiftCertificate> findAll();
