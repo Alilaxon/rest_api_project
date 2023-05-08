@@ -83,6 +83,8 @@ class GiftCertificateServiceTest {
 
     @Test
     void get() {
+        when(giftRepository.findById(ID)).thenReturn(GIFT);
+        assertEquals(giftCertificateService.get(ID),GIFT);
     }
 
     @Test
@@ -93,5 +95,8 @@ class GiftCertificateServiceTest {
 
     @Test
     void update() {
+        when(giftRepository.update(GIFT)).thenReturn(GIFT);
+        assertEquals(giftCertificateService.update(ID,GIFT_DTO),GIFT);
+        verify(giftRepository,times(1)).update(GIFT);
     }
 }

@@ -34,6 +34,8 @@ public class TagServiceImp implements TagService {
     @Override
     public Tag create(TagDto tagDto) {
 
+        log.info("Tag '{}' will be create",tagDto.getName());
+
         return tagRepository.save(TagBuilder.builder().name(tagDto.getName()).build());
     }
 
@@ -50,15 +52,11 @@ public class TagServiceImp implements TagService {
         return tagRepository.getAll();
     }
 
-    @Override
-    public Boolean delete(String name) {
-
-        //TODO
-        return null;
-    }
 
     @Override
     public Long deleteById(Long id) {
+        log.info("Tag id= '{}' will be create",id);
+
         return tagRepository.Delete(id);
     }
 }

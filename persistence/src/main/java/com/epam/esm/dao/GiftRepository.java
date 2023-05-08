@@ -18,6 +18,8 @@ public interface GiftRepository {
 
     List<GiftCertificate> findAllByTag(String tag);
 
+    List<GiftCertificate> findAllByPartOfDescription(String part);
+
     GiftCertificate update (GiftCertificate giftCertificate);
 
     void delete(Long id);

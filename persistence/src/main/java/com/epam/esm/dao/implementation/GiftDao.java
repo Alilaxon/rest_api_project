@@ -185,6 +185,32 @@ public class GiftDao implements GiftRepository {
         }
         return giftCertificateList;
     }
+    //SELECT * from gifts where gifts.description LIKE '%very%';
+    @Override
+    public List<GiftCertificate> findAllByPartOfDescription(String part) {
+        List<GiftCertificate> giftCertificateList = new ArrayList<>();
+
+        String partOfDescription = String.valueOf(new StringBuilder().append("%").append(part).append("%"));
+
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * from gifts where gifts.description LIKE ?");
+            statement.setString(1, partOfDescription);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                giftCertificateList.add(GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return giftCertificateList;
+    }
 
     @Override
     public GiftCertificate update(GiftCertificate gift) {

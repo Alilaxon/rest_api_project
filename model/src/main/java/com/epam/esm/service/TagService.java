@@ -15,8 +15,6 @@ public interface TagService {
 
     public List<Tag> getAll();
 
-    public Boolean delete (String name);
-
     Long deleteById(Long id);
 
 
