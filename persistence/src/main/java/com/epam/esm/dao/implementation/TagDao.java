@@ -6,6 +6,8 @@ import com.epam.esm.dao.mapper.Columns;
 import com.epam.esm.dao.mapper.GiftMapper;
 import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @Repository
 public class TagDao implements TagRepository {
 
+    private static final Logger log = LogManager.getLogger(TagDao.class);
     @Override
     public List<Tag> getAll() {
 
@@ -76,9 +79,11 @@ public class TagDao implements TagRepository {
     @Override
     public Tag findByName(String name) {
 
+        log.info("Find Tag by name {}",name);
+
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
-            PreparedStatement statement = connection.prepareStatement("SELECT FROM tags WHERE tag_name=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags WHERE tag_name=?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             Tag tag = null;

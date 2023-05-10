@@ -108,4 +108,18 @@ public class GiftCertificate {
     public int hashCode() {
         return Objects.hash(name, description, price, duration);
     }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate='" + createDate + '\'' +
+                ", lastUpdateDate='" + lastUpdateDate + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
 }

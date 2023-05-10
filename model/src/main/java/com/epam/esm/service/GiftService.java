@@ -14,6 +14,8 @@ public interface GiftService {
 
     List<GiftCertificate> getAllByTag(String tag);
 
+    List<GiftCertificate> getAllByDescriptionAndSorted(String part,String sort);
+
     GiftCertificate get(Long id);
 
     Long deleteById(Long id);

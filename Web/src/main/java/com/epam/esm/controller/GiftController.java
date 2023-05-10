@@ -35,6 +35,13 @@ public class GiftController {
 
     }
 
+    @GetMapping("/getAllByTag")
+    public List<GiftCertificate> getAllByTag(@RequestParam("tag") String tag){
+        log.info("get all by tag = {}",tag);
+
+        return giftCertificateService.getAllByTag(tag);
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) {

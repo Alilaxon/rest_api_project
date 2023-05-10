@@ -2,12 +2,13 @@ package com.epam.esm.dao.implementation;
 
 import com.epam.esm.dao.DBmanadger.DBManager;
 import com.epam.esm.dao.GiftRepository;
-import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.mapper.Columns;
 import com.epam.esm.dao.mapper.GiftMapper;
 import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Repository
 public class GiftDao implements GiftRepository {
+
+    private static final Logger log = LogManager.getLogger(GiftDao.class);
     @Override
     public GiftCertificate save(GiftCertificate gift) {
         try (Connection connection = DBManager.getInstance().getConnection()) {
@@ -162,20 +165,22 @@ public class GiftDao implements GiftRepository {
     }
 
     @Override
-    public List<GiftCertificate> findAllByTag(String tag) {
+    public List<GiftCertificate> findAllByTag(Long id) {
+
+        log.info("tag id = {}",id);
 
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM  gifts INNER JOIN tags t on t.tag_name = ? ORDER BY gift_name DESC ");
-            statement.setString(1, tag);
+                    "SELECT * FROM  gifts JOIN gifts_tags gt on gifts.id = gt.gift_id WHERE tag_id = ? ORDER BY gift_name DESC ");
+            statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
 
-                giftCertificateList.add(GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.ID))));
+                giftCertificateList.add(GiftMapper.extractGift(resultSet,findByGiftId(resultSet.getLong(Columns.GIFT_ID))));
             }
 
             statement.close();
@@ -183,6 +188,10 @@ public class GiftDao implements GiftRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        for (GiftCertificate gift: giftCertificateList) {
+            log.info("{}",gift);
+        }
+
         return giftCertificateList;
     }
     //SELECT * from gifts where gifts.description LIKE '%very%';
@@ -195,7 +204,7 @@ public class GiftDao implements GiftRepository {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * from gifts where gifts.description LIKE ?");
+                    "SELECT * from gifts where gifts.description LIKE ? ORDER BY gift_name DESC ");
             statement.setString(1, partOfDescription);
             ResultSet resultSet = statement.executeQuery();
 
@@ -258,7 +267,7 @@ public class GiftDao implements GiftRepository {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags " +
-                    "INNER JOIN gifts_tags gt on tags.id = gt.tag_id WHERE gift_id=?");
+                    "JOIN gifts_tags gt on tags.id = gt.tag_id WHERE gift_id=?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 

@@ -78,7 +78,7 @@ class GiftCertificateServiceTest {
 
     @Test
     void getAllByTag() {
-        when(giftRepository.findAllByTag(TAG_ONE.getName())).thenReturn(List.of(GIFT));
+        when(giftRepository.findAllByTag(TAG_ONE.getId())).thenReturn(List.of(GIFT));
     }
 
     @Test

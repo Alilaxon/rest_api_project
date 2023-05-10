@@ -59,7 +59,16 @@ public class GiftCertificateService implements GiftService {
     @Override
     public List<GiftCertificate> getAllByTag(String tag) {
 
-        return giftRepository.findAllByTag(tag);
+        log.info("Find by tag {}",tag);
+
+       Long tagId = tagRepository.findByName(tag).getId();
+
+        return giftRepository.findAllByTag(tagId);
+    }
+
+    @Override
+    public List<GiftCertificate> getAllByDescriptionAndSorted(String part, String sort) {
+        return null;
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface GiftRepository {
 
     List<GiftCertificate> findAll();
 
-    List<GiftCertificate> findAllByTag(String tag);
+    List<GiftCertificate> findAllByTag(Long id);
 
     List<GiftCertificate> findAllByPartOfDescription(String part);
 
