@@ -9,7 +9,7 @@ import java.util.List;
 public interface GiftService {
 
 
-    public GiftCertificate create(GiftDto giftDto) throws GiftNameIsReservedException;
+    GiftCertificate create(GiftDto giftDto) throws GiftNameIsReservedException;
 
     List<GiftCertificate> getAll();
 

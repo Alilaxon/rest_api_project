@@ -2,8 +2,6 @@ package com.epam.esm.dao.builders;
 
 import com.epam.esm.entity.Tag;
 
-import java.util.Objects;
-
 public class TagBuilder {
 
     private Long id;

@@ -1,9 +1,6 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.entity.Tag;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.NonNull;
-
 import java.beans.ConstructorProperties;
 import java.util.List;
 

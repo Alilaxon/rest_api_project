@@ -39,7 +39,7 @@ public class GiftCertificateService implements GiftService {
 
        if (checkGiftName(giftDto)) {
            throw new GiftNameIsReservedException();
-       };
+       }
 
         List<Tag> tags = checkNewTags(tagRepository.getAll(), giftDto.getTags());
 
@@ -119,7 +119,6 @@ public class GiftCertificateService implements GiftService {
             boolean isExist = false;
             for (Tag tag : allTags) {
                 if (Objects.equals(newTag.getName(), tag.getName())) {
-                    newTag.setId(tagRepository.save(newTag).getId());
                     tagList.add(tag);
                     isExist = true;
                     break;
@@ -133,8 +132,5 @@ public class GiftCertificateService implements GiftService {
         return tagList;
     }
 
-//    private boolean checkFacultyRename (GiftDto giftDto){
-//        return giftRepository.existsByName(giftDto.getName()) &&
-//                !giftRepository.findByName(giftDto.getName()).getId().equals(giftDto.ge);
-//    }
+
 }
