@@ -126,12 +126,15 @@ public class GiftDao implements GiftRepository {
     public boolean existsByName(String name) {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
+            boolean existsByName = false;
+
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE gift_name =?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
+            existsByName = resultSet.next();
             statement.close();
 
-            return resultSet.next();
+            return existsByName;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -174,7 +177,7 @@ public class GiftDao implements GiftRepository {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM  gifts JOIN gifts_tags gt on gifts.id = gt.gift_id WHERE tag_id = ? ORDER BY gift_name DESC ");
+                    "SELECT * FROM  gifts JOIN gifts_tags gt on gifts.id = gt.gift_id WHERE tag_id = ? ORDER BY gift_name ASC ");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
@@ -189,12 +192,12 @@ public class GiftDao implements GiftRepository {
             throw new RuntimeException(e);
         }
         for (GiftCertificate gift: giftCertificateList) {
-            log.info("{}",gift);
+        //    log.info("{}",gift);
         }
 
         return giftCertificateList;
     }
-    //SELECT * from gifts where gifts.description LIKE '%very%';
+
     @Override
     public List<GiftCertificate> findAllByPartOfDescription(String part) {
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
@@ -204,7 +207,7 @@ public class GiftDao implements GiftRepository {
         try (Connection connection = DBManager.getInstance().getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * from gifts where gifts.description LIKE ? ORDER BY gift_name DESC ");
+                    "SELECT * from gifts where gifts.description LIKE ? ORDER BY gift_name ASC ");
             statement.setString(1, partOfDescription);
             ResultSet resultSet = statement.executeQuery();
 

@@ -6,6 +6,7 @@ import com.epam.esm.dao.builders.GiftBuilder;
 import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.GiftNameIsReservedException;
 import com.epam.esm.service.GiftService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,11 @@ public class GiftCertificateService implements GiftService {
     }
 
     @Override
-    public GiftCertificate create(GiftDto giftDto) {
+    public GiftCertificate create(GiftDto giftDto) throws GiftNameIsReservedException {
+
+       if (checkGiftName(giftDto)) {
+           throw new GiftNameIsReservedException();
+       };
 
         List<Tag> tags = checkNewTags(tagRepository.getAll(), giftDto.getTags());
 
@@ -67,8 +72,8 @@ public class GiftCertificateService implements GiftService {
     }
 
     @Override
-    public List<GiftCertificate> getAllByDescriptionAndSorted(String part, String sort) {
-        return null;
+    public List<GiftCertificate> getAllByDescription(String description) {
+        return giftRepository.findAllByPartOfDescription(description);
     }
 
     @Override

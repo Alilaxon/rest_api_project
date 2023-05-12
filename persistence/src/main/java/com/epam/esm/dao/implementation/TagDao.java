@@ -143,6 +143,22 @@ public class TagDao implements TagRepository {
         }
      return id;
     }
+
+    @Override
+    public boolean existsByName(String name) {
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags WHERE tag_name =?");
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+            statement.close();
+
+            return resultSet.next();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 

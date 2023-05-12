@@ -6,6 +6,7 @@ import com.epam.esm.dao.builders.GiftBuilder;
 import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.GiftNameIsReservedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,12 +64,21 @@ class GiftCertificateServiceTest {
 
 
     @Test
-    void create() {
+    void create() throws GiftNameIsReservedException {
+        when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(false);
         when(tagRepository.save(TAG_ONE)).thenReturn(TAG_ONE);
         when(giftRepository.save(GIFT)).thenReturn(GIFT);
         assertEquals(giftCertificateService.create(GIFT_DTO),GIFT);
         verify(giftRepository,times(1)).save(GIFT);
     }
+
+    @Test
+    void createThrowGiftNameIsReservedException() {
+        when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(true);
+        assertThrows(GiftNameIsReservedException.class, ()-> giftCertificateService.create(GIFT_DTO));
+    }
+
+
 
     @Test
     void getAll() {

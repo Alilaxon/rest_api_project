@@ -2,8 +2,10 @@ package com.epam.esm.service.implementation;
 
 import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.builders.TagBuilder;
+import com.epam.esm.dto.GiftDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.TagNameIsReservedException;
 import com.epam.esm.service.TagService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,11 +30,17 @@ public class TagServiceImp implements TagService {
     @Override
     public Tag create(Tag tag) {
 
+
+
         return tagRepository.save(tag);
     }
 
     @Override
-    public Tag create(TagDto tagDto) {
+    public Tag create(TagDto tagDto) throws TagNameIsReservedException {
+
+     if (  checkTagName(tagDto)){
+           throw new TagNameIsReservedException();
+        }
 
         log.info("Tag '{}' will be create",tagDto.getName());
 
@@ -59,4 +67,9 @@ public class TagServiceImp implements TagService {
 
         return tagRepository.Delete(id);
     }
+
+    private boolean checkTagName(TagDto tagDto) {
+
+        return tagRepository.existsByName(tagDto.getName());
+    };
 }

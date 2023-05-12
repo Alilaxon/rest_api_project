@@ -4,6 +4,7 @@ import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.builders.TagBuilder;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.TagNameIsReservedException;
 import com.epam.esm.service.TagService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class TagServiceImpTest {
     }
 
     @Test
-    void create() {
+    void create() throws TagNameIsReservedException {
         when(tagRepository.save(TAG)).thenReturn(TAG);
         assertEquals(tagService.create(TAG_DTO),TAG);
         verify(tagRepository,times(1)).save(TAG);

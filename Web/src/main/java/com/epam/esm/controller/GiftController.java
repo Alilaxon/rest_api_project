@@ -1,8 +1,10 @@
 package com.epam.esm.controller;
 import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.GiftNameIsReservedException;
 import com.epam.esm.service.GiftService;
 import com.epam.esm.service.implementation.GiftCertificateService;
+import com.epam.esm.utils.Sorter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +38,39 @@ public class GiftController {
     }
 
     @GetMapping("/getAllByTag")
-    public List<GiftCertificate> getAllByTag(@RequestParam("tag") String tag){
+    public List<GiftCertificate> getAllByTag
+            (@RequestParam("tag") String tag ,
+             @RequestParam("order") String order){
         log.info("get all by tag = {}",tag);
 
+        if (order.equals("desc")){
+            log.info("sort all by desc");
+           return Sorter.sorting(giftCertificateService.getAllByTag(tag));
+        }
+
+        log.info("sort all by asc");
         return giftCertificateService.getAllByTag(tag);
+    }
+    @GetMapping("/getAllByDescription")
+    public List<GiftCertificate> getAllByDescription (
+            @RequestParam("description")String description,
+            @RequestParam("order") String order){
+
+        log.info("get all by description = {}",description);
+
+        if (order.equals("desc")){
+            log.info("sort all by desc");
+            return Sorter.sorting(giftCertificateService.getAllByDescription(description));
+        }
+        log.info("sort all by asc");
+        return giftCertificateService.getAllByDescription(description);
     }
 
 
     @PostMapping("/create")
-    public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) {
+    public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) throws GiftNameIsReservedException {
 
         log.info("Gift '{}' will be create",giftDto.getName());
-
         Long id = giftCertificateService.create(giftDto).getId();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
