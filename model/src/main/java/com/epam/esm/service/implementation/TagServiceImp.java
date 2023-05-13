@@ -4,8 +4,11 @@ import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.builders.TagBuilder;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagDtoException;
 import com.epam.esm.exception.TagNameIsReservedException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.utils.TagValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,9 @@ public class TagServiceImp implements TagService {
     }
 
     @Override
-    public Tag create(TagDto tagDto) throws TagNameIsReservedException {
+    public Tag create(TagDto tagDto) throws TagNameIsReservedException, InvalidGiftDtoException, InvalidTagDtoException {
+
+        TagValidator.checkTagDto(tagDto);
 
         if (checkTagName(tagDto)) {
             throw new TagNameIsReservedException();

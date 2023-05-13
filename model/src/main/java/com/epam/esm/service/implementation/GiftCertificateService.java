@@ -7,7 +7,11 @@ import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.GiftNameIsReservedException;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagException;
 import com.epam.esm.service.GiftService;
+import com.epam.esm.utils.GiftValidator;
+import com.epam.esm.utils.TagValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +39,9 @@ public class GiftCertificateService implements GiftService {
     }
 
     @Override
-    public GiftCertificate create(GiftDto giftDto) throws GiftNameIsReservedException {
+    public GiftCertificate create(GiftDto giftDto) throws GiftNameIsReservedException, InvalidGiftDtoException, InvalidTagException {
+
+        GiftValidator.checkGiftDto(giftDto);
 
        if (checkGiftName(giftDto)) {
            throw new GiftNameIsReservedException();
@@ -113,7 +119,7 @@ public class GiftCertificateService implements GiftService {
         return giftRepository.existsByName(giftDto.getName());
     }
 
-    private List<Tag> checkNewTags(List<Tag> allTags, List<Tag> newTags) {
+    private List<Tag> checkNewTags(List<Tag> allTags, List<Tag> newTags) throws  InvalidTagException {
         List<Tag> tagList = new ArrayList<>();
         for (Tag newTag : newTags) {
             boolean isExist = false;
@@ -125,6 +131,7 @@ public class GiftCertificateService implements GiftService {
                 }
             }
             if (!isExist) {
+                TagValidator.checkTag(newTag);
                 newTag.setId(tagRepository.save(newTag).getId());
                 tagList.add(newTag);
             }

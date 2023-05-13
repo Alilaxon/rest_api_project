@@ -7,6 +7,8 @@ import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.GiftNameIsReservedException;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,12 +34,17 @@ class GiftCertificateServiceTest {
     private final Long ID = 1L;
 
     private final String NAME = "Gift";
+    private final String INVALID_NAME = "";
 
     private final String DESCRIPTION = "description";
 
     private final Long PRICE = 1000L;
 
+    private final Long INVALID_PRICE = -1000l;
+
     private final Long DURATION = 7L;
+
+    private final Long INVALID_DURATION = -7L;
 
     private final Tag TAG_ONE = new Tag(1L, "red");
 
@@ -64,7 +71,7 @@ class GiftCertificateServiceTest {
 
 
     @Test
-    void create() throws GiftNameIsReservedException {
+    void create() throws GiftNameIsReservedException, InvalidGiftDtoException, InvalidTagException {
         when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(false);
         when(tagRepository.save(TAG_ONE)).thenReturn(TAG_ONE);
         when(giftRepository.save(GIFT)).thenReturn(GIFT);
@@ -78,6 +85,26 @@ class GiftCertificateServiceTest {
         assertThrows(GiftNameIsReservedException.class, ()-> giftCertificateService.create(GIFT_DTO));
     }
 
+    @Test
+    void createWithInvalidNameThrowInvalidGiftDtoException() {
+        when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(false);
+        GIFT_DTO.setName(INVALID_NAME);
+        assertThrows(InvalidGiftDtoException.class, ()-> giftCertificateService.create(GIFT_DTO));
+    }
+
+    @Test
+    void createWithInvalidPriceThrowInvalidGiftDtoException() {
+        when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(false);
+        GIFT_DTO.setPrice(INVALID_PRICE);
+        assertThrows(InvalidGiftDtoException.class, ()-> giftCertificateService.create(GIFT_DTO));
+    }
+
+    @Test
+    void createWithInvalidDurationThrowInvalidGiftDtoExceptionName() {
+        when(giftRepository.existsByName(GIFT_DTO.getName())).thenReturn(false);
+        GIFT_DTO.setDuration(INVALID_DURATION);
+        assertThrows(InvalidGiftDtoException.class, ()-> giftCertificateService.create(GIFT_DTO));
+    }
 
 
     @Test

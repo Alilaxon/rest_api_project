@@ -4,6 +4,9 @@ import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.builders.TagBuilder;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.GiftNameIsReservedException;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagDtoException;
 import com.epam.esm.exception.TagNameIsReservedException;
 import com.epam.esm.service.TagService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +26,7 @@ class TagServiceImpTest {
     private Long ID = 1L;
 
     private String NAME = "Tag";
+    private String INVALID_NAME = "";
 
     private Tag TAG;
 
@@ -38,7 +42,7 @@ class TagServiceImpTest {
     }
 
     @Test
-    void create() throws TagNameIsReservedException {
+    void create() throws TagNameIsReservedException, InvalidTagDtoException, InvalidGiftDtoException {
         when(tagRepository.save(TAG)).thenReturn(TAG);
         assertEquals(tagService.create(TAG_DTO),TAG);
         verify(tagRepository,times(1)).save(TAG);
@@ -46,7 +50,9 @@ class TagServiceImpTest {
     }
 
     @Test
-    void testCreate() {
+    void CreateThrowsTagNameIsReservedException() {
+        TAG_DTO.setName(INVALID_NAME);
+        assertThrows(InvalidTagDtoException.class,()-> tagService.create(TAG_DTO));
     }
 
     @Test
