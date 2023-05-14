@@ -17,8 +17,8 @@ CREATE TABLE gifts
     description  VARCHAR(64)      NOT NULL,
     price        INT              NOT NULL,
     duration     INT              NOT NULL,
-    createDate   VARCHAR(64)      NOT NULL,
-    lastUpdateDate VARCHAR(64)    NOT NULL ,
+    create_Date   VARCHAR(64)      NOT NULL,
+    last_Update_Date VARCHAR(64)    NOT NULL ,
 
     PRIMARY KEY (id)
 

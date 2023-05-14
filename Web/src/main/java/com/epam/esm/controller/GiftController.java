@@ -2,6 +2,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.GiftNameIsReservedException;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagException;
 import com.epam.esm.service.GiftService;
 import com.epam.esm.service.implementation.GiftCertificateService;
 import com.epam.esm.utils.Sorter;
@@ -68,7 +70,7 @@ public class GiftController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) throws GiftNameIsReservedException {
+    public ResponseEntity<Long> create(@RequestBody GiftDto giftDto) throws GiftNameIsReservedException, InvalidTagException, InvalidGiftDtoException {
 
         log.info("Gift '{}' will be create",giftDto.getName());
         Long id = giftCertificateService.create(giftDto).getId();

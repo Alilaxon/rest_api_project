@@ -4,6 +4,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.InvalidGiftDtoException;
+import com.epam.esm.exception.InvalidTagDtoException;
 import com.epam.esm.exception.TagNameIsReservedException;
 import com.epam.esm.service.TagService;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +46,7 @@ public class TagController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Long> create(@RequestBody TagDto tagDto) throws TagNameIsReservedException {
+    public ResponseEntity<Long> create(@RequestBody TagDto tagDto) throws TagNameIsReservedException, InvalidTagDtoException, InvalidGiftDtoException {
 
         System.out.println("create");
 

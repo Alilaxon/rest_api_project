@@ -1,6 +1,6 @@
 package com.epam.esm.dao.implementation;
 
-import com.epam.esm.dao.DBmanadger.DBManager;
+
 import com.epam.esm.dao.GiftRepository;
 import com.epam.esm.dao.mapper.Columns;
 import com.epam.esm.dao.mapper.GiftMapper;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,16 @@ import java.util.List;
 public class GiftDao implements GiftRepository {
 
     private static final Logger log = LogManager.getLogger(GiftDao.class);
+
+    private final DataSource dataSource;
+
+    public GiftDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Override
     public GiftCertificate save(GiftCertificate gift) {
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO gifts " +
@@ -75,7 +83,7 @@ public class GiftDao implements GiftRepository {
     public GiftCertificate findById(Long id) {
 
         GiftCertificate giftCertificate = new GiftCertificate();
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE id =?");
             statement.setLong(1, id);
@@ -100,7 +108,7 @@ public class GiftDao implements GiftRepository {
     @Override
     public GiftCertificate findByName(String name) {
         GiftCertificate giftCertificate = new GiftCertificate();
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE gift_name =?");
             statement.setString(1,name);
@@ -124,9 +132,9 @@ public class GiftDao implements GiftRepository {
 
     @Override
     public boolean existsByName(String name) {
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
-            boolean existsByName = false;
+            boolean existsByName;
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts WHERE gift_name =?");
             statement.setString(1, name);
@@ -149,7 +157,7 @@ public class GiftDao implements GiftRepository {
 
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM gifts");
             ResultSet resultSet = statement.executeQuery();
@@ -174,7 +182,7 @@ public class GiftDao implements GiftRepository {
 
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM  gifts JOIN gifts_tags gt on gifts.id = gt.gift_id WHERE tag_id = ? ORDER BY gift_name ASC ");
@@ -204,7 +212,7 @@ public class GiftDao implements GiftRepository {
 
         String partOfDescription = String.valueOf(new StringBuilder().append("%").append(part).append("%"));
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * from gifts where gifts.description LIKE ? ORDER BY gift_name ASC ");
@@ -226,7 +234,7 @@ public class GiftDao implements GiftRepository {
 
     @Override
     public GiftCertificate update(GiftCertificate gift) {
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE gifts SET gift_name = ? , description = ?," +
@@ -250,7 +258,7 @@ public class GiftDao implements GiftRepository {
     @Override
     public void delete(Long id) {
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("DELETE FROM gifts WHERE id =?");
             statement.setLong(1, id);
@@ -267,7 +275,7 @@ public class GiftDao implements GiftRepository {
     private List<Tag> findByGiftId(Long id) {
 
         List<Tag> tags = new ArrayList<>();
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags " +
                     "JOIN gifts_tags gt on tags.id = gt.tag_id WHERE gift_id=?");

@@ -1,15 +1,13 @@
 package com.epam.esm.dao.implementation;
 
-import com.epam.esm.dao.DBmanadger.DBManager;
 import com.epam.esm.dao.TagRepository;
-import com.epam.esm.dao.mapper.Columns;
-import com.epam.esm.dao.mapper.GiftMapper;
 import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +17,18 @@ import java.util.List;
 public class TagDao implements TagRepository {
 
     private static final Logger log = LogManager.getLogger(TagDao.class);
+    private final DataSource dataSource;
+
+
+    public TagDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Override
     public List<Tag> getAll() {
 
         List<Tag> tagList = new ArrayList<>();
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags");
             ResultSet resultSet = statement.executeQuery();
@@ -43,7 +48,7 @@ public class TagDao implements TagRepository {
 
     public Tag save(Tag tag) {
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO tags (tag_name) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
@@ -81,7 +86,7 @@ public class TagDao implements TagRepository {
 
         log.info("Find Tag by name {}",name);
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags WHERE tag_name=?");
             statement.setString(1, name);
@@ -105,9 +110,9 @@ public class TagDao implements TagRepository {
 
     @Override
     public Tag findById(Long id) {
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement statement = connection.prepareStatement("SELECT FROM tags WHERE id=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags WHERE id=?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             Tag tag = null;
@@ -130,7 +135,7 @@ public class TagDao implements TagRepository {
     @Override
     public Long Delete(Long id) {
 
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("DELETE FROM tags WHERE id =?");
             statement.setLong(1, id);
@@ -146,14 +151,17 @@ public class TagDao implements TagRepository {
 
     @Override
     public boolean existsByName(String name) {
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
+
+            boolean existsByName;
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tags WHERE tag_name =?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
+            existsByName = resultSet.next();
             statement.close();
 
-            return resultSet.next();
+            return existsByName;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
