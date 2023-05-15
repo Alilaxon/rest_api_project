@@ -57,8 +57,8 @@ public class GiftCertificateService implements GiftService {
                 .description(giftDto.getDescription())
                 .price(giftDto.getPrice())
                 .duration(giftDto.getDuration())
-                .createDate(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
-                .lastUpdateDate(String.valueOf(LocalDateTime.now()))
+                .createDate(LocalDateTime.now().format(DateTimeFormatter. ISO_OFFSET_DATE))
+                .lastUpdateDate(LocalDateTime.now().format(DateTimeFormatter. ISO_OFFSET_DATE))
                 .tags(tags)
                 .build());
     }
@@ -109,8 +109,8 @@ public class GiftCertificateService implements GiftService {
                 .description(giftDto.getDescription())
                 .price(giftDto.getPrice())
                 .duration(giftDto.getDuration())
-                .createDate(String.valueOf(LocalDateTime.now()))
-                .lastUpdateDate(String.valueOf(LocalDateTime.now()))
+                .createDate(LocalDateTime.now().format(DateTimeFormatter. ISO_OFFSET_DATE))
+                .lastUpdateDate(LocalDateTime.now().format(DateTimeFormatter. ISO_OFFSET_DATE))
                 .tags(giftDto.getTags())
                 .build());
     }

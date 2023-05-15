@@ -55,6 +55,7 @@ public class GiftDao implements GiftRepository {
                     gift.setId(generatedKeys.getLong(1));
                 } else {
                     throw new SQLException("Creating gift failed, no ID obtained.");
+
                 }
             }
 
@@ -101,7 +102,11 @@ public class GiftDao implements GiftRepository {
 
         } catch (SQLException e) {
 
+            log.error("Error in method findById with id = {} ",id);
+
             throw new RuntimeException(e);
+
+
         }
     }
 
@@ -125,7 +130,7 @@ public class GiftDao implements GiftRepository {
 
 
         } catch (SQLException e) {
-
+            log.error("Error in method findByName with name = {} ",name);
             throw new RuntimeException(e);
         }
     }
@@ -145,6 +150,7 @@ public class GiftDao implements GiftRepository {
             return existsByName;
 
         } catch (Exception e) {
+            log.error("Error in method existsByName with name = {} ",name);
             throw new RuntimeException(e);
         }
 
@@ -170,6 +176,7 @@ public class GiftDao implements GiftRepository {
             statement.close();
 
         } catch (SQLException e) {
+            log.error("Error in method findAll");
             throw new RuntimeException(e);
         }
         return giftCertificateList;
@@ -197,6 +204,7 @@ public class GiftDao implements GiftRepository {
             statement.close();
 
         } catch (SQLException e) {
+            log.error("Error in method findAllByTag with tag id = {} ",id);
             throw new RuntimeException(e);
         }
         for (GiftCertificate gift: giftCertificateList) {
@@ -227,6 +235,7 @@ public class GiftDao implements GiftRepository {
             statement.close();
 
         } catch (SQLException e) {
+            log.error("Error in method findAllByPartOfDescription with description = {} ",part);
             throw new RuntimeException(e);
         }
         return giftCertificateList;
@@ -238,18 +247,20 @@ public class GiftDao implements GiftRepository {
 
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE gifts SET gift_name = ? , description = ?," +
-                            "price =?,duration =?  WHERE id = ?");
+                            "price =?,duration =?,last_update_date = ?  WHERE id = ?");
 
             statement.setString(1, gift.getName());
             statement.setString(2, gift.getDescription());
             statement.setLong(3, gift.getPrice());
             statement.setLong(4, gift.getDuration());
-            statement.setLong(5, gift.getId());
+            statement.setString(5,gift.getLastUpdateDate());
+            statement.setLong(6, gift.getId());
             statement.executeUpdate();
             statement.close();
 
 
         } catch (SQLException e) {
+            log.error("Error in method update with gift_id = {} ",gift.getId());
             throw new RuntimeException(e);
         }
         return gift;
@@ -266,6 +277,7 @@ public class GiftDao implements GiftRepository {
             statement.close();
 
         } catch (Exception e) {
+            log.error("Error in method delete with gift_id = {} ",id);
             throw new RuntimeException(e);
         }
 
@@ -292,7 +304,7 @@ public class GiftDao implements GiftRepository {
             return tags;
 
         } catch (SQLException e) {
-
+            log.error("Error in method findByGiftId  gift_id = {} ",id);
             throw new RuntimeException(e);
         }
     }
