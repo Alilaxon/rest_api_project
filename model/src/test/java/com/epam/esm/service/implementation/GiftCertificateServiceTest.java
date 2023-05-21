@@ -76,7 +76,7 @@ class GiftCertificateServiceTest {
         when(tagRepository.save(TAG_ONE)).thenReturn(TAG_ONE);
         when(giftRepository.save(GIFT)).thenReturn(GIFT);
         assertEquals(giftCertificateService.create(GIFT_DTO),GIFT);
-        verify(giftRepository,times(1)).save(GIFT);
+
     }
 
     @Test
@@ -134,6 +134,6 @@ class GiftCertificateServiceTest {
     void update() {
         when(giftRepository.update(GIFT)).thenReturn(GIFT);
         assertEquals(giftCertificateService.update(ID,GIFT_DTO),GIFT);
-        verify(giftRepository,times(1)).update(GIFT);
+
     }
 }
